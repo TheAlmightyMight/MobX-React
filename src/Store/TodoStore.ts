@@ -23,9 +23,9 @@ class Todo implements TodoInterface {
 }
 
 class TodoStoreClass implements TodoStoreInterface {
-  todos: Array<Todo> = [];
-  loading: boolean = false;
-  error: boolean = false;
+  todos: Array<Todo>;
+  loading: boolean;
+  error: boolean;
 
   constructor() {
     makeObservable(this, {
@@ -35,6 +35,10 @@ class TodoStoreClass implements TodoStoreInterface {
       addTodo: action,
       todoAmount: computed,
     });
+
+    this.todos = [];
+    this.loading = false;
+    this.error = false;
   }
 
   addTodo(title: string, info: string): void {
@@ -107,6 +111,10 @@ class TodoStoreClass implements TodoStoreInterface {
 
   get todoAmount(): number {
     return this.todos.length;
+  }
+
+  get todosAll(): Array<Todo> {
+    return this.todos;
   }
 }
 

@@ -1,7 +1,12 @@
+import TodoStore from "../Store/TodoStore";
+
+type TodoStoreType = typeof TodoStore;
+
 interface TodoStoreInterface {
   addTodo(title: string, info: string): void;
   removeTodo(id: string): void;
   get todoAmount(): number;
+  get todosAll(): Array<TodoInterface>;
   sortByDate(option: SortOptions): void;
   sortByImportance(option: SortOptions): void;
   filterByStatus(status: TodoStatuses): void;
@@ -36,4 +41,4 @@ enum Importance {
 }
 
 export { SortOptions, TodoStatuses, Importance };
-export type { TodoStoreInterface, TodoInterface };
+export type { TodoStoreInterface, TodoInterface, TodoStoreType };
