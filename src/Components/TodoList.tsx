@@ -1,6 +1,11 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { TodoStoreType } from "../types/TodoTypes";
+import { v4 } from "uuid";
+import styles from "../Styles/TodoList.module.css";
+
+// Components
+import TodoItem from "./TodoItem";
 
 interface Props {
   store: TodoStoreType;
@@ -8,10 +13,10 @@ interface Props {
 
 const TodoList = observer((props: Props) => {
   return (
-    <div>
+    <div className={styles.container}>
       <ul>
         {props.store.todosAll.map((el) => {
-          return <li>{el.title}</li>;
+          return <TodoItem {...el} key={el.id} />;
         })}
       </ul>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../Styles/TodoForm.module.css";
 import { v4 } from "uuid";
-import { TodoStoreType } from "../types/TodoTypes";
+import { Importance, TodoStoreType } from "../types/TodoTypes";
 
 const optionsArray = (() => {
   const options: Array<React.ReactElement> = [];
@@ -21,9 +21,9 @@ interface Props {
 const TodoForm: React.FC<Props> = ({ store }) => {
   const [title, setTitle] = useState<string>("");
   const [info, setInfo] = useState<string>("");
+  const [importance, setImportance] = useState<number>(Importance.IMPORTANT);
 
   const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("yay");
     setTitle(e.target.value);
   };
 
@@ -31,34 +31,70 @@ const TodoForm: React.FC<Props> = ({ store }) => {
     setInfo(e.target.value);
   };
 
+  const importanceHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    switch (e.target.value) {
+      case "Important": {
+        setImportance(1);
+        break;
+      }
+      case "Can wait": {
+        setImportance(2);
+        break;
+      }
+      case "Unimportant": {
+        setImportance(3);
+        break;
+      }
+      default: {
+        console.log("yay");
+        break;
+      }
+    }
+  };
+
   return (
     <form>
-      <fieldset className={styles.fieldSetContainer}>
-        <legend>Create a Todo</legend>
+      <fieldset className={styles.container}>
+        <legend className={styles.label}>Create a Todo</legend>
 
-        <label htmlFor="todo-title">Title</label>
+        <div className={styles.inputContainer}>
+          <label className={styles.label} htmlFor="todo-title">
+            Title
+          </label>
+          <input
+            onChange={titleHandler}
+            className={styles.input}
+            type="text"
+            name="title"
+            id="todo-title"
+          />
+        </div>
+
+        <div className={styles.inputContainer}>
+          <label className={styles.label} htmlFor="info">
+            Description
+          </label>
+          <input
+            onChange={infoHandler}
+            className={styles.input}
+            type="text"
+            name="completion-date"
+            id="info"
+          />
+        </div>
+
+        <div className={styles.inputContainer}>
+          <label className={styles.label} htmlFor="">
+            Importance
+          </label>
+          <select className={styles.input} onChange={importanceHandler}>
+            <optgroup>{optionsArray}</optgroup>
+          </select>
+        </div>
+
         <input
-          onChange={titleHandler}
-          type="text"
-          name="title"
-          id="todo-title"
-        />
-
-        <label htmlFor="date">Description</label>
-        <input
-          onChange={infoHandler}
-          type="text"
-          name="completion-date"
-          id="date"
-        />
-
-        <label htmlFor="">Importance</label>
-        <select>
-          <optgroup>{optionsArray}</optgroup>
-        </select>
-
-        <input
-          onClick={() => store.addTodo(title, info)}
+          onClick={() => store.addTodo(title, info, importance)}
+          className={styles.btn}
           type="button"
           value="Create a new todo"
         />
