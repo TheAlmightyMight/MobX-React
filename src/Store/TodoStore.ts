@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, computed } from "mobx";
+import { action, makeObservable, observable, computed, autorun } from "mobx";
 import { v4 } from "uuid";
 
 import { SortOptions, TodoStatuses, Importance } from "../types/TodoTypes";
@@ -12,22 +12,27 @@ class Todo implements TodoInterface {
   status: TodoStatuses;
   importance: Importance;
 
-  constructor(title: string, info?: string) {
+  constructor(title: string, info?: string, importance?: Importance) {
     this.title = title;
     this.id = v4();
     this.info = info || "";
     this.date = new Date();
     this.status = TodoStatuses.ADDED;
-    this.importance = Importance.IMPORTANT;
+    this.importance = importance || Importance.IMPORTANT;
   }
 }
 
 class TodoStoreClass implements TodoStoreInterface {
-  todos: Array<Todo>;
-  loading: boolean;
-  error: boolean;
+  todos: Array<Todo> = [];
+  loading: boolean = false;
+  error: boolean = false;
+  static instance: InstanceType<typeof TodoStoreClass>;
 
   constructor() {
+    if (TodoStoreClass.instance) {
+      return TodoStoreClass.instance;
+    }
+
     makeObservable(this, {
       todos: observable,
       loading: observable,
@@ -36,13 +41,23 @@ class TodoStoreClass implements TodoStoreInterface {
       todoAmount: computed,
     });
 
-    this.todos = [];
-    this.loading = false;
-    this.error = false;
+    TodoStoreClass.instance = this;
+
+    const arr = JSON.parse(localStorage.getItem("todos") as string);
+    if (arr) {
+      TodoStoreClass.instance.todos = arr.length === 0 ? [] : arr;
+    } else {
+      localStorage.setItem("todos", JSON.stringify([]));
+      TodoStoreClass.instance.todos = [];
+    }
   }
 
-  addTodo(title: string, info: string): void {
-    this.todos.push(new Todo(title, info));
+  static {
+    console.log("Store has been initialized");
+  }
+
+  addTodo(title: string, info: string, importance: number): void {
+    this.todos.push(new Todo(title, info, importance));
   }
 
   removeTodo(id: string): void {
@@ -118,4 +133,10 @@ class TodoStoreClass implements TodoStoreInterface {
   }
 }
 
-export default new TodoStoreClass();
+const TodoStore = new TodoStoreClass();
+
+const disposer = autorun(() => {
+  localStorage.setItem("todos", JSON.stringify(TodoStore.todos));
+});
+
+export default TodoStore;
