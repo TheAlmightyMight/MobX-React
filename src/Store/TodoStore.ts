@@ -1,28 +1,28 @@
 import { action, makeObservable, observable, computed, autorun } from "mobx";
 import { v4 } from "uuid";
 
-import { SortOptions, TodoStatuses, Importance } from "../types/TodoTypes";
-import { TodoStoreInterface, TodoInterface } from "../types/TodoTypes";
+import { SortOptions, TodoStatuses, TodoImportance } from "../types/TodoTypes";
+import { TodoInterface } from "../types/TodoTypes";
 
 class Todo implements TodoInterface {
-  id: string;
+  id: string = v4();
   title: string;
   info: string;
-  date: Date;
-  status: TodoStatuses;
-  importance: Importance;
+  creationDate: Date = new Date();
+  edited: boolean = false;
+  editDate: string = "";
+  history: Array<any> = [];
+  status: TodoStatuses = TodoStatuses.ADDED;
+  importance: TodoImportance;
 
-  constructor(title: string, info?: string, importance?: Importance) {
+  constructor(title: string, info?: string, importance?: TodoImportance) {
     this.title = title;
-    this.id = v4();
     this.info = info || "";
-    this.date = new Date();
-    this.status = TodoStatuses.ADDED;
-    this.importance = importance || Importance.IMPORTANT;
+    this.importance = importance || TodoImportance.IMPORTANT;
   }
 }
 
-class TodoStoreClass implements TodoStoreInterface {
+class TodoStoreClass {
   todos: Array<Todo> = [];
   loading: boolean = false;
   error: boolean = false;
@@ -43,9 +43,18 @@ class TodoStoreClass implements TodoStoreInterface {
 
     TodoStoreClass.instance = this;
 
-    const arr = JSON.parse(localStorage.getItem("todos") as string);
+    const arr = JSON.parse(localStorage.getItem("todos")!);
+
     if (arr) {
-      TodoStoreClass.instance.todos = arr.length === 0 ? [] : arr;
+      TodoStoreClass.instance.todos =
+        arr.length === 0
+          ? []
+          : arr.map((el: Todo) => {
+              return {
+                ...el,
+                creationDate: new Date(el.creationDate),
+              };
+            });
     } else {
       localStorage.setItem("todos", JSON.stringify([]));
       TodoStoreClass.instance.todos = [];
@@ -57,24 +66,47 @@ class TodoStoreClass implements TodoStoreInterface {
   }
 
   addTodo(title: string, info: string, importance: number): void {
-    this.todos.push(new Todo(title, info, importance));
+    const todo = new Todo(title, info, importance);
+    this.todos.push(todo);
   }
 
   removeTodo(id: string): void {
-    this.todos = this.todos.filter((el) => el.id !== id);
+    this.todos = this.todos.filter(el => el.id !== id);
+  }
+
+  changeTodoStatus(id: string, status: TodoStatuses): boolean {
+    this.todos = this.todos.map(el => {
+      if (el.id === id) {
+        return { ...el, status: status };
+      }
+      return el;
+    });
+
+    return false;
+  }
+
+  changeTodoImportance(id: string, importance: TodoImportance): boolean {
+    this.todos = this.todos.map(el => {
+      if (el.id === id) {
+        return { ...el, importance: importance };
+      }
+      return el;
+    });
+
+    return false;
   }
 
   sortByDate(option: SortOptions): void | Array<Todo> {
     switch (option) {
       case SortOptions.ASCENDING: {
         this.todos = this.todos.sort(
-          (a, b) => a.date.getTime() - b.date.getTime()
+          (a, b) => a.creationDate.getTime() - b.creationDate.getTime(),
         );
         break;
       }
       case SortOptions.DESCENDING: {
         this.todos = this.todos.sort(
-          (a, b) => b.date.getTime() - a.date.getTime()
+          (a, b) => b.creationDate.getTime() - a.creationDate.getTime(),
         );
         break;
       }
@@ -83,7 +115,7 @@ class TodoStoreClass implements TodoStoreInterface {
     }
   }
 
-  sortByImportance(option: SortOptions): void | Array<Todo> {
+  sortByTodoImportance(option: SortOptions): void | Array<Todo> {
     switch (option) {
       case SortOptions.ASCENDING: {
         this.todos = this.todos.sort((a, b) => a.importance - b.importance);
@@ -121,7 +153,7 @@ class TodoStoreClass implements TodoStoreInterface {
   }
 
   filterByName(title: string): Array<Todo> {
-    return this.todos.filter((el) => new RegExp(`${title}`).test(el.title));
+    return this.todos.filter(el => new RegExp(`${title}`).test(el.title));
   }
 
   get todoAmount(): number {

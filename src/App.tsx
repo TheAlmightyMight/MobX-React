@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react";
 import TodoForm from "./Components/TodoForm";
 import Heading from "./Components/Heading";
 import TodoList from "./Components/TodoList";
+import UserPanel from "./Components/UserPanel";
 
 //CSS
 import styles from "./Styles/App.module.css";
 
 //Store
-import TodoStore from "./Store/TodoStore";
+import { TodoStore } from "../src/DevTools";
 
 // TODO:
 // 1. Make a todo list component sortable, filterable and rearrangeable with drag and drop API;
@@ -17,13 +18,12 @@ import TodoStore from "./Store/TodoStore";
 
 function App() {
   return (
-    <div className="App">
-      <main className={styles.mainContainer}>
-        <Heading />
-        <TodoForm store={TodoStore} />
-        <TodoList store={TodoStore} />
-      </main>
-    </div>
+    <main className={styles.mainContainer}>
+      <Heading />
+      {/* <UserPanel /> */}
+      <TodoForm store={TodoStore} />
+      <TodoList store={TodoStore} />
+    </main>
   );
 }
 

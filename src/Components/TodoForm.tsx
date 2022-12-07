@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../Styles/TodoForm.module.css";
 import { v4 } from "uuid";
-import { Importance, TodoStoreType } from "../types/TodoTypes";
+import { TodoImportance, TodoStoreType } from "../types/TodoTypes";
 
 const optionsArray = (() => {
   const options: Array<React.ReactElement> = [];
@@ -21,7 +21,9 @@ interface Props {
 const TodoForm: React.FC<Props> = ({ store }) => {
   const [title, setTitle] = useState<string>("");
   const [info, setInfo] = useState<string>("");
-  const [importance, setImportance] = useState<number>(Importance.IMPORTANT);
+  const [importance, setImportance] = useState<number>(
+    TodoImportance.IMPORTANT,
+  );
 
   const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -58,7 +60,10 @@ const TodoForm: React.FC<Props> = ({ store }) => {
         <legend className={styles.label}>Create a Todo</legend>
 
         <div className={styles.inputContainer}>
-          <label className={styles.label} htmlFor="todo-title">
+          <label
+            className={styles.label}
+            htmlFor="todo-title"
+          >
             Title
           </label>
           <input
@@ -71,7 +76,10 @@ const TodoForm: React.FC<Props> = ({ store }) => {
         </div>
 
         <div className={styles.inputContainer}>
-          <label className={styles.label} htmlFor="info">
+          <label
+            className={styles.label}
+            htmlFor="info"
+          >
             Description
           </label>
           <input
@@ -84,10 +92,16 @@ const TodoForm: React.FC<Props> = ({ store }) => {
         </div>
 
         <div className={styles.inputContainer}>
-          <label className={styles.label} htmlFor="">
+          <label
+            className={styles.label}
+            htmlFor=""
+          >
             Importance
           </label>
-          <select className={styles.input} onChange={importanceHandler}>
+          <select
+            className={styles.input}
+            onChange={importanceHandler}
+          >
             <optgroup>{optionsArray}</optgroup>
           </select>
         </div>

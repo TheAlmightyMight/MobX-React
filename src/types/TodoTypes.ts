@@ -2,24 +2,16 @@ import TodoStore from "../Store/TodoStore";
 
 type TodoStoreType = typeof TodoStore;
 
-interface TodoStoreInterface {
-  addTodo(title: string, info: string): void;
-  removeTodo(id: string): void;
-  get todoAmount(): number;
-  get todosAll(): Array<TodoInterface>;
-  sortByDate(option: SortOptions): void;
-  sortByImportance(option: SortOptions): void;
-  filterByStatus(status: TodoStatuses): void;
-  filterByName(name: string): void;
-}
-
 interface TodoInterface {
   id: string;
   title: string;
   info: string;
-  date: Date;
+  edited: boolean;
+  creationDate: Date;
+  editDate: string;
+  history: Array<any>;
   status: TodoStatuses;
-  importance: Importance;
+  importance: TodoImportance;
 }
 
 enum SortOptions {
@@ -34,11 +26,11 @@ enum TodoStatuses {
   FINISHED = "FINISHED",
 }
 
-enum Importance {
+enum TodoImportance {
   IMPORTANT = 1,
   CAN_WAIT = 2,
   UNIMPORTANT = 3,
 }
 
-export { SortOptions, TodoStatuses, Importance };
-export type { TodoStoreInterface, TodoInterface, TodoStoreType };
+export { SortOptions, TodoStatuses, TodoImportance };
+export type { TodoInterface, TodoStoreType };

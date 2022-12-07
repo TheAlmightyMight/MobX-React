@@ -1,8 +1,9 @@
 import React from "react";
+import styles from "../Styles/Icons.module.css";
 
 const SearchIcon: React.FC<{}> = () => {
   return (
-    <svg version="1.1" x="0px" y="0px" viewBox="0 0 183.792 183.792">
+    <svg width="40px" viewBox="0 0 183.792 183.792">
       <path
         d="M54.734,9.053C39.12,18.067,27.95,32.624,23.284,50.039c-4.667,17.415-2.271,35.606,6.743,51.22
  c12.023,20.823,34.441,33.759,58.508,33.759c7.599,0,15.139-1.308,22.287-3.818l30.364,52.592l21.65-12.5l-30.359-52.583
