@@ -19,9 +19,31 @@ const ShowEditButton: React.FC<{
   return <button onClick={() => handler}>History</button>;
 };
 
+const DeleteButtonComponent: React.FC<{
+  handler: (e: React.MouseEvent) => void;
+}> = ({ handler }) => {
+  return <button onClick={handler}>Delete</button>;
+};
+
+const EditButtonComponent: React.FC<{
+  handler: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ handler }) => {
+  return <button onClick={() => handler(true)}>Edit</button>;
+};
+
+const DeleteButton = WithTooltip({
+  Component: DeleteButtonComponent,
+  info: "Delete a todo",
+});
+
+const EditButton = WithTooltip({
+  Component: EditButtonComponent,
+  info: "Enter edit mode",
+});
+
 const Tooltip = WithTooltip({
   Component: ShowEditButton,
-  info: "See all edit history",
+  info: "See edit history",
 });
 
 interface Props extends TodoInterface {
@@ -70,8 +92,8 @@ const TodoItemNoEditMode: React.FC<Props> = ({
         </p>
         <TodoToolPanel>
           <Tooltip handler={setHistoryShown} />
-          <button onClick={() => TodoStore.removeTodo(id)}>Delete</button>
-          <button onClick={() => showEditModeHandler(true)}>Edit</button>
+          <DeleteButton handler={() => TodoStore.removeTodo(id)} />
+          <EditButton handler={setEditMode} />
         </TodoToolPanel>
 
         {historyShown && <ChangeList history={history} />}

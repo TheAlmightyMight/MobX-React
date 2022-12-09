@@ -2,9 +2,7 @@ import React from "react";
 import Hint from "./Hint";
 
 interface Arguments {
-  Component: React.ComponentType<{
-    handler: React.Dispatch<React.SetStateAction<boolean>>;
-  }>;
+  Component: React.ComponentType<any>;
   info: string;
 }
 
@@ -37,13 +35,14 @@ const WithTooltip = <T extends Arguments>({ Component, info }: T) => {
 
     render() {
       return (
-        <span
+        <div
+          style={{ position: "relative", width: "60px" }}
           onMouseEnter={this.mouseEnterHandler.bind(this)}
           onMouseLeave={this.mouseLeaveHandler.bind(this)}
         >
           {this.state.shown ? <Hint info={info} /> : null}
           <Component handler={this.props.handler} />
-        </span>
+        </div>
       );
     }
   };

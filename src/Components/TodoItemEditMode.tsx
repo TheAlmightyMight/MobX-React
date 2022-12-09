@@ -57,55 +57,58 @@ const TodoItemEditMode: React.FC<Props> = ({
   return (
     <li className={styles.item}>
       <h3 className={styles.heading}>{title}</h3>
-      <div className={styles.info}>
-        <label>
-          Current status:{" "}
-          <select
-            onChange={() =>
-              TodoStore.changeTodoStatus(id, TodoStatuses.STARTED)
-            }
-          >
-            <optgroup>
-              <option>Important</option>
-              <option>Can wait</option>
-              <option>Unimportant</option>
-            </optgroup>
-          </select>
-        </label>
-        <br />
-        <label>
-          Current importance:{" "}
-          <select
-            onChange={() =>
-              TodoStore.changeTodoImportance(id, TodoImportance.CAN_WAIT)
-            }
-          >
-            <optgroup>
-              <option>Important</option>
-              <option>Can wait</option>
-              <option>Unimportant</option>
-            </optgroup>
-          </select>
-        </label>
-        <div style={{ position: "relative" }}>
-          <label
-            htmlFor="description"
-            className={styles.editModeInfoLabel}
-          >
-            Todo description:
+      <form className={styles.info}>
+        <fieldset>
+          <label>
+            Current status:{" "}
+            <select
+              onChange={() =>
+                TodoStore.changeTodoStatus(id, TodoStatuses.STARTED)
+              }
+            >
+              <optgroup>
+                <option>Important</option>
+                <option>Can wait</option>
+                <option>Unimportant</option>
+              </optgroup>
+            </select>
           </label>
-          <textarea
-            id="description"
-            className={styles.editModeInfo}
-            onChange={infoValueHandler}
-            value={infoValue}
-          />
-        </div>
-        <TodoToolPanel>
-          <button onClick={() => showEditModeHandler(false)}>Exit</button>
-          <button onClick={() => TodoStore}>Save</button>
-        </TodoToolPanel>
-      </div>
+          <br />
+          <label>
+            Current importance:{" "}
+            <select
+              onChange={() =>
+                TodoStore.changeTodoImportance(id, TodoImportance.CAN_WAIT)
+              }
+              // value={}
+            >
+              <optgroup>
+                <option>Important</option>
+                <option>Can wait</option>
+                <option>Unimportant</option>
+              </optgroup>
+            </select>
+          </label>
+          <div style={{ position: "relative" }}>
+            <label
+              htmlFor="description"
+              className={styles.editModeInfoLabel}
+            >
+              Todo description:
+            </label>
+            <textarea
+              id="description"
+              className={styles.editModeInfo}
+              onChange={infoValueHandler}
+              value={infoValue}
+            />
+          </div>
+          <TodoToolPanel>
+            <button onClick={() => showEditModeHandler(false)}>Exit</button>
+            <button onClick={() => TodoStore}>Save</button>
+          </TodoToolPanel>
+        </fieldset>
+      </form>
     </li>
   );
 };

@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../Styles/TodoForm.module.css";
 import { v4 } from "uuid";
+
+// Store
 import { TodoImportance, TodoStoreType } from "../types/TodoTypes";
 
+// Hooks
+import useError from "../hooks/UseError";
+
+// Helper
 const optionsArray = (() => {
   const options: Array<React.ReactElement> = [];
   const names = ["Important", "Can wait", "Unimportant"];
@@ -18,11 +24,13 @@ interface Props {
   store: TodoStoreType;
 }
 
+// ----------------------------------------------------
+
 const TodoForm: React.FC<Props> = ({ store }) => {
   const [title, setTitle] = useState<string>("");
-  const [titleError, setTitleError] = useState<string>("");
+  const [titleError, setTitleError] = useError(30);
   const [info, setInfo] = useState<string>("");
-  const [infoError, setInfoError] = useState<string>("");
+  const [infoError, setInfoError] = useError(500);
 
   const [importance, setImportance] = useState<number>(
     TodoImportance.IMPORTANT,
@@ -30,9 +38,10 @@ const TodoForm: React.FC<Props> = ({ store }) => {
 
   const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+    setTitleError(e);
   };
 
-  const infoHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const infoHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInfo(e.target.value);
   };
 
@@ -62,6 +71,8 @@ const TodoForm: React.FC<Props> = ({ store }) => {
       <fieldset className={styles.container}>
         <legend className={styles.label}>Create a Todo</legend>
 
+        {titleError ? "error" : ""}
+
         <div className={styles.inputContainer}>
           <label
             className={styles.label}
@@ -85,10 +96,9 @@ const TodoForm: React.FC<Props> = ({ store }) => {
           >
             Description
           </label>
-          <input
+          <textarea
             onChange={infoHandler}
             className={styles.input}
-            type="text"
             name="completion-date"
             id="info"
           />
