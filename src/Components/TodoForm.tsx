@@ -20,7 +20,10 @@ interface Props {
 
 const TodoForm: React.FC<Props> = ({ store }) => {
   const [title, setTitle] = useState<string>("");
+  const [titleError, setTitleError] = useState<string>("");
   const [info, setInfo] = useState<string>("");
+  const [infoError, setInfoError] = useState<string>("");
+
   const [importance, setImportance] = useState<number>(
     TodoImportance.IMPORTANT,
   );

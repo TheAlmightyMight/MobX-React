@@ -1,9 +1,9 @@
 .container {
   position: absolute;
-  top: -5px;
+  top: -55px;
 
   background: hsl(0, 0%, 25%);
-  border: 1px solid none;
+  border: none;
   border-radius: 15px;
   padding: 0.5rem;
   color: hsl(0, 0%, 75%);

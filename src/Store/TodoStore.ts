@@ -1,8 +1,8 @@
-import { action, makeObservable, observable, computed, autorun } from "mobx";
+import { makeAutoObservable, autorun } from "mobx";
 import { v4 } from "uuid";
 
 import { SortOptions, TodoStatuses, TodoImportance } from "../types/TodoTypes";
-import { TodoInterface } from "../types/TodoTypes";
+import { TodoInterface, TodoHistoryInterface } from "../types/TodoTypes";
 
 class Todo implements TodoInterface {
   id: string = v4();
@@ -11,7 +11,7 @@ class Todo implements TodoInterface {
   creationDate: Date = new Date();
   edited: boolean = false;
   editDate: string = "";
-  history: Array<any> = [];
+  history: Array<TodoHistoryInterface> = [];
   status: TodoStatuses = TodoStatuses.ADDED;
   importance: TodoImportance;
 
@@ -19,6 +19,16 @@ class Todo implements TodoInterface {
     this.title = title;
     this.info = info || "";
     this.importance = importance || TodoImportance.IMPORTANT;
+  }
+}
+
+export class TodoHistoryItem implements TodoHistoryInterface {
+  id: string = v4();
+  date: string = new Date().toLocaleString();
+  changes: string[];
+
+  constructor(changes: string[]) {
+    this.changes = changes;
   }
 }
 
@@ -33,13 +43,7 @@ class TodoStoreClass {
       return TodoStoreClass.instance;
     }
 
-    makeObservable(this, {
-      todos: observable,
-      loading: observable,
-      error: observable,
-      addTodo: action,
-      todoAmount: computed,
-    });
+    makeAutoObservable(this);
 
     TodoStoreClass.instance = this;
 
@@ -156,6 +160,11 @@ class TodoStoreClass {
     return this.todos.filter(el => new RegExp(`${title}`).test(el.title));
   }
 
+  addToItemHistory(id: string, change: TodoHistoryInterface): void {
+    const item = this.todos.find(el => el.id === id) as TodoInterface;
+    item.history.push(change);
+  }
+
   get todoAmount(): number {
     return this.todos.length;
   }
@@ -167,7 +176,7 @@ class TodoStoreClass {
 
 const TodoStore = new TodoStoreClass();
 
-const disposer = autorun(() => {
+autorun(() => {
   localStorage.setItem("todos", JSON.stringify(TodoStore.todos));
 });
 

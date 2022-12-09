@@ -5,6 +5,7 @@
   border: 1px solid black;
   border-radius: 15px;
   padding: 1rem;
+  margin: 1rem;
   position: relative;
 }
 
@@ -28,4 +29,24 @@
 }
 
 .important {
+}
+
+.editModeHeading {
+  text-transform: capitalize;
+}
+
+.editModeInfo {
+  margin-top: 30px;
+  resize: none;
+  width: 100%;
+  height: 120px;
+}
+
+.editModeInfoLabel {
+  position: absolute;
+  top: 5px;
+}
+
+select {
+  margin-bottom: 1rem;
 }

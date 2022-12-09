@@ -1,21 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../Styles/TodoItem.module.css";
+
+//Components
 import WithTooltip from "../Components/WithTooltip";
+import TodoItemEditMode from "./TodoItemEditMode";
+import TodoItemNoEditMode from "./TodoItemNoEditMode";
 
 // Store
 import { TodoStore } from "../DevTools";
+import { TodoHistoryItem } from "../Store/TodoStore";
 
-interface Props {
-  title: string;
-  info: string;
-  importance: number;
-  id: string;
-  creationDate: Date;
-  history: Array<any>;
-}
+// Types
+import { TodoImportance, TodoInterface } from "../types/TodoTypes";
 
-const ShowEditButton: React.FC<{}> = () => {
-  return <button>Edit history</button>;
+const ShowEditButton: React.FC<{
+  handler: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ handler }) => {
+  return <button onClick={() => handler}>History</button>;
 };
 
 const Tooltip = WithTooltip({
@@ -23,37 +24,24 @@ const Tooltip = WithTooltip({
   info: "See all edit history",
 });
 
-const TodoItem: React.FC<Props> = ({
-  title,
-  info,
-  importance,
-  id,
-  creationDate,
-  history,
-}) => {
-  console.log(creationDate);
-  return (
-    <li className={styles.item}>
-      <h3 className={styles.heading}>{title}</h3>
-      <div className={styles.info}>
-        <p>{info}</p>
-        <p>
-          {importance === 1
-            ? "Important"
-            : importance === 2
-            ? "Can wait"
-            : "Unimportant"}
-        </p>
+const TodoItem: React.FC<TodoInterface> = props => {
+  const [editMode, setEditMode] = useState<boolean>(false);
 
-        <Tooltip />
-        <span>Created: {creationDate.toLocaleDateString()}</span>
-        <span>LastEdited: </span>
-
-        <button onClick={() => TodoStore.removeTodo(id)}>Delete</button>
-        <button>Change urgency</button>
-      </div>
-    </li>
-  );
+  if (editMode) {
+    return (
+      <TodoItemEditMode
+        {...props}
+        showEditModeHandler={setEditMode}
+      />
+    );
+  } else {
+    return (
+      <TodoItemNoEditMode
+        {...props}
+        showEditModeHandler={setEditMode}
+      />
+    );
+  }
 };
 
 export default TodoItem;
