@@ -14,7 +14,6 @@ class Todo implements TodoInterface {
   title: string;
   info: string;
   creationDate: Date = new Date();
-  edited: boolean = false;
   editDate: string = "";
   history: Array<TodoHistoryInterface> = [];
   status: TodoStatuses = TodoStatuses.ADDED;
@@ -45,7 +44,6 @@ class TodoStoreClass {
 
   mutableTodos: Array<Todo> = [];
   filters: Filters = { importance: 0, status: "" };
-  // sorts: string[] = [];
 
   static instance: InstanceType<typeof TodoStoreClass>;
 
@@ -207,7 +205,6 @@ reaction(
   () => TodoStore.filters,
   () => {
     TodoStore.mutableTodos = TodoStore.todos;
-    console.log(TodoStore.filtersAll);
     for (let key in TodoStore.filtersAll) {
       //@ts-ignore
       if (TodoStore.filtersAll[key] === 0 || TodoStore.filtersAll[key] === "") {

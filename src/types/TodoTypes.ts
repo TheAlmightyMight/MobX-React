@@ -6,7 +6,6 @@ interface TodoInterface {
   id: string;
   title: string;
   info: string;
-  edited: boolean;
   creationDate: Date;
   editDate: string;
   history: Array<TodoHistoryInterface>;

@@ -4,7 +4,6 @@ import { TodoStore } from "../DevTools";
 
 //Components
 import StatusIcon from "./StatusIcon";
-import SearchIcon from "./SearchIcon";
 import ImportanceIcon from "./ImportanceIcon";
 import DateIcon from "./DateIcon";
 import StatusSelect from "./StatusSelect";
@@ -32,19 +31,39 @@ const Representation: React.FC = e => {
           <fieldset className={styles.fieldSet}>
             {/* <label>Filter</label> */}
 
-            <label>
-              Importance
-              <select onChange={e => importanceFilterHandler(e)}>
+            <div className={styles.container}>
+              <label
+                className={styles.label}
+                htmlFor="importance"
+              >
+                Importance
+              </label>
+              <select
+                className={styles.select}
+                id="importance"
+                onChange={e => importanceFilterHandler(e)}
+              >
                 <ImportanceSelect />
               </select>
-            </label>
+            </div>
 
-            <label>
-              Progress
-              <select onChange={e => statusFilterHandler(e)}>
+            <div className={styles.container}>
+              <label
+                className={styles.label}
+                htmlFor="progress"
+              >
+                Progress
+              </label>
+              <select
+                className={styles.select}
+                id="progress"
+                onChange={e => statusFilterHandler(e)}
+              >
                 <StatusSelect />
               </select>
-            </label>
+            </div>
+
+            <div></div>
           </fieldset>
         </form>
       </section>
