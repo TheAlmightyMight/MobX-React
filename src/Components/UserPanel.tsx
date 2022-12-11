@@ -12,6 +12,7 @@ const UserPanel: React.FC = () => {
   return (
     <div style={{ width: "100%" }}>
       <Filter />
+      <section></section>
       {/* <StatusIcon />
       <ImportanceIcon />
       <DateIcon /> */}

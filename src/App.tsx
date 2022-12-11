@@ -25,7 +25,7 @@ function App() {
         userPanelShown={userPanelShown}
       />
       {userPanelShown ? <UserPanel /> : <TodoForm store={TodoStore} />}
-      <TodoList store={TodoStore} />
+      <TodoList />
     </main>
   );
 }

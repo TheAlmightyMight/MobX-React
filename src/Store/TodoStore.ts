@@ -1,4 +1,4 @@
-import { makeAutoObservable, autorun } from "mobx";
+import { makeAutoObservable, autorun, reaction } from "mobx";
 import { v4 } from "uuid";
 
 import { SortOptions, TodoStatuses, TodoImportance } from "../types/TodoTypes";
@@ -38,16 +38,20 @@ export class TodoHistoryItem implements TodoHistoryInterface {
 
 class TodoStoreClass {
   todos: Array<Todo> = [];
+
   loading: boolean = false;
   error: boolean = false;
+
+  mutableTodos: Array<Todo> = [];
+  filters: {} = {};
+  // sorts: string[] = [];
+
   static instance: InstanceType<typeof TodoStoreClass>;
 
   constructor() {
     if (TodoStoreClass.instance) {
       return TodoStoreClass.instance;
     }
-
-    makeAutoObservable(this);
 
     TodoStoreClass.instance = this;
 
@@ -67,6 +71,9 @@ class TodoStoreClass {
       localStorage.setItem("todos", JSON.stringify([]));
       TodoStoreClass.instance.todos = [];
     }
+
+    this.mutableTodos = [...TodoStoreClass.instance.todos];
+    makeAutoObservable(this);
   }
 
   static {
@@ -75,7 +82,7 @@ class TodoStoreClass {
 
   addTodo(title: string, info: string, importance: number): void {
     const todo = new Todo(title, info, importance);
-    this.todos.push(todo);
+    this.todos = [...this.todos, todo];
   }
 
   removeTodo(id: string): void {
@@ -121,61 +128,39 @@ class TodoStoreClass {
   sortByDate(option: SortOptions): void | Array<Todo> {
     switch (option) {
       case SortOptions.ASCENDING: {
-        this.todos = this.todos.sort(
+        this.mutableTodos.sort(
           (a, b) => a.creationDate.getTime() - b.creationDate.getTime(),
         );
         break;
       }
       case SortOptions.DESCENDING: {
-        this.todos = this.todos.sort(
+        this.mutableTodos.sort(
           (a, b) => b.creationDate.getTime() - a.creationDate.getTime(),
         );
         break;
       }
       default:
-        return this.todos;
+        return this.mutableTodos;
     }
   }
 
   sortByTodoImportance(option: SortOptions): void | Array<Todo> {
     switch (option) {
       case SortOptions.ASCENDING: {
-        this.todos = this.todos.sort((a, b) => a.importance - b.importance);
+        this.mutableTodos.sort((a, b) => a.importance - b.importance);
         break;
       }
       case SortOptions.DESCENDING: {
-        this.todos = this.todos.sort((a, b) => b.importance - a.importance);
+        this.mutableTodos.sort((a, b) => b.importance - a.importance);
         break;
       }
       default:
-        return this.todos;
+        return this.mutableTodos;
     }
   }
 
-  filterByStatus(status: TodoStatuses): Array<Todo> {
-    if (status === TodoStatuses.ADDED) {
-      return this.todos.filter((el, i) => {
-        return el.status === TodoStatuses.ADDED;
-      });
-    } else if (status === TodoStatuses.STARTED) {
-      return this.todos.filter((el, i) => {
-        return el.status === TodoStatuses.STARTED;
-      });
-    } else if (status === TodoStatuses.FINISHED) {
-      return this.todos.filter((el, i) => {
-        return el.status === TodoStatuses.FINISHED;
-      });
-    } else if (status === TodoStatuses.POSTPONED) {
-      return this.todos.filter((el, i) => {
-        return el.status === TodoStatuses.POSTPONED;
-      });
-    } else {
-      throw new Error("Could not filter: incorrect status: " + status);
-    }
-  }
-
-  filterByName(title: string): Array<Todo> {
-    return this.todos.filter(el => new RegExp(`${title}`).test(el.title));
+  undoSort(): void {
+    this.mutableTodos = this.todos;
   }
 
   addToItemHistory(id: string, change: TodoHistoryInterface): void {
@@ -188,7 +173,7 @@ class TodoStoreClass {
   }
 
   get todosAll(): Array<Todo> {
-    return this.todos;
+    return this.mutableTodos;
   }
 }
 
@@ -197,5 +182,26 @@ const TodoStore = new TodoStoreClass();
 autorun(() => {
   localStorage.setItem("todos", JSON.stringify(TodoStore.todos));
 });
+
+reaction(
+  () => TodoStore.todos,
+  () => {
+    TodoStore.mutableTodos = TodoStore.todos;
+  },
+);
+
+reaction(
+  () => TodoStore.filters,
+  () => {
+    TodoStore.mutableTodos = TodoStore.todos;
+    // const sorts = Object.keys(obj); maybe not
+    for (let key in TodoStore.filters) {
+      TodoStore.mutableTodos = TodoStore.mutableTodos.filter(
+        //@ts-ignore
+        el => el[key] === TodoStore.filters[key],
+      );
+    }
+  },
+);
 
 export default TodoStore;
