@@ -6,6 +6,7 @@ import {
   TodoInterface,
   TodoHistoryInterface,
   TodoChange,
+  Filters,
 } from "../types/TodoTypes";
 
 class Todo implements TodoInterface {
@@ -43,7 +44,7 @@ class TodoStoreClass {
   error: boolean = false;
 
   mutableTodos: Array<Todo> = [];
-  filters: {} = {};
+  filters: Filters = { importance: 0, status: "" };
   // sorts: string[] = [];
 
   static instance: InstanceType<typeof TodoStoreClass>;
@@ -168,6 +169,18 @@ class TodoStoreClass {
     item.history.push(change);
   }
 
+  setFilter(newFilters: typeof this.filters): void {
+    this.filters = newFilters;
+  }
+
+  setMutableTodos(arr: Array<Todo>): void {
+    this.mutableTodos = arr;
+  }
+
+  get filtersAll(): typeof this.filters {
+    return this.filters;
+  }
+
   get todoAmount(): number {
     return this.todos.length;
   }
@@ -194,11 +207,17 @@ reaction(
   () => TodoStore.filters,
   () => {
     TodoStore.mutableTodos = TodoStore.todos;
-    // const sorts = Object.keys(obj); maybe not
-    for (let key in TodoStore.filters) {
-      TodoStore.mutableTodos = TodoStore.mutableTodos.filter(
-        //@ts-ignore
-        el => el[key] === TodoStore.filters[key],
+    console.log(TodoStore.filtersAll);
+    for (let key in TodoStore.filtersAll) {
+      //@ts-ignore
+      if (TodoStore.filtersAll[key] === 0 || TodoStore.filtersAll[key] === "") {
+        continue;
+      }
+      TodoStore.setMutableTodos(
+        TodoStore.mutableTodos.filter(
+          //@ts-ignore
+          el => el[key] === TodoStore.filtersAll[key],
+        ),
       );
     }
   },

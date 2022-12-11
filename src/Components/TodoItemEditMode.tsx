@@ -4,6 +4,8 @@ import styles from "../Styles/TodoItem.module.css";
 //Components
 import WithTooltip from "../Components/WithTooltip";
 import TodoToolPanel from "./TodoToolPanel";
+import StatusSelect from "./StatusSelect";
+import ImportanceSelect from "./ImportanceSelect";
 
 // Store
 import { TodoStore } from "../DevTools";
@@ -123,12 +125,7 @@ const TodoItemEditMode: React.FC<Props> = ({
               value={statusValue}
               onChange={e => statusValueHandler(e)}
             >
-              <optgroup>
-                <option value={TodoStatuses.ADDED}>Added</option>
-                <option value={TodoStatuses.STARTED}>Started</option>
-                <option value={TodoStatuses.POSTPONED}>Postponed</option>
-                <option value={TodoStatuses.FINISHED}>Finished</option>
-              </optgroup>
+              <StatusSelect />
             </select>
           </label>
           <br />
@@ -139,11 +136,7 @@ const TodoItemEditMode: React.FC<Props> = ({
               onChange={e => importanceValueHandler(e)}
               value={importanceValue}
             >
-              <optgroup>
-                <option value={TodoImportance.IMPORTANT}>Important</option>
-                <option value={TodoImportance.CAN_WAIT}>Can wait</option>
-                <option value={TodoImportance.UNIMPORTANT}>Unimportant</option>
-              </optgroup>
+              <ImportanceSelect />
             </select>
           </label>
           <div>

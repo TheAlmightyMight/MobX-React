@@ -45,5 +45,16 @@ enum TodoImportance {
   UNIMPORTANT = 3,
 }
 
+interface Filters {
+  importance: TodoImportance | number;
+  status: TodoStatuses | string;
+}
+
 export { SortOptions, TodoStatuses, TodoImportance };
-export type { TodoInterface, TodoStoreType, TodoHistoryInterface, TodoChange };
+export type {
+  TodoInterface,
+  TodoStoreType,
+  TodoHistoryInterface,
+  TodoChange,
+  Filters,
+};
