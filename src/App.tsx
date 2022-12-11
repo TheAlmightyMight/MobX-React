@@ -17,11 +17,11 @@ import { TodoStore } from "../src/DevTools";
 // 2. Connect with some kind of Backend
 
 function App() {
+  const [userPanelShown, setUserPanelShown] = useState<boolean>(false);
   return (
     <main className={styles.mainContainer}>
       <Heading />
-      {/* <UserPanel /> */}
-      <TodoForm store={TodoStore} />
+      {userPanelShown ? <UserPanel /> : <TodoForm store={TodoStore} />}
       <TodoList store={TodoStore} />
     </main>
   );

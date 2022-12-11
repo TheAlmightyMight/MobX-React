@@ -1,3 +1,18 @@
 .container {
+  width: 80%;
   margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.showPanel {
+  font-size: 24px;
+  font-weight: bold;
+  padding: 0.5rem;
+  /* border-radius: 25px; */
+}
+
+.showPanel:hover {
+  cursor: pointer;
 }
