@@ -1,2 +1,9 @@
 .search {
+  position: absolute;
+  left: 105px;
+  top: 10px;
+}
+
+.search:hover {
+  cursor: pointer;
 }

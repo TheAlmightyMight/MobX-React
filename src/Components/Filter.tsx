@@ -6,6 +6,7 @@ const Filter: React.FC = () => {
   return (
     <div className={styles.container}>
       <form className={styles.form}>
+        <SearchIcon />
         <label
           className={styles.label}
           htmlFor="search"
