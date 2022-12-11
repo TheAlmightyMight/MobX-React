@@ -2,7 +2,11 @@ import { makeAutoObservable, autorun } from "mobx";
 import { v4 } from "uuid";
 
 import { SortOptions, TodoStatuses, TodoImportance } from "../types/TodoTypes";
-import { TodoInterface, TodoHistoryInterface } from "../types/TodoTypes";
+import {
+  TodoInterface,
+  TodoHistoryInterface,
+  TodoChange,
+} from "../types/TodoTypes";
 
 class Todo implements TodoInterface {
   id: string = v4();
@@ -25,9 +29,9 @@ class Todo implements TodoInterface {
 export class TodoHistoryItem implements TodoHistoryInterface {
   id: string = v4();
   date: string = new Date().toLocaleString();
-  changes: string[];
+  changes: Array<TodoChange>;
 
-  constructor(changes: string[]) {
+  constructor(changes: Array<TodoChange>) {
     this.changes = changes;
   }
 }
@@ -78,26 +82,40 @@ class TodoStoreClass {
     this.todos = this.todos.filter(el => el.id !== id);
   }
 
-  changeTodoStatus(id: string, status: TodoStatuses): boolean {
+  changeTodoStatus(id: string, status: TodoStatuses): void {
     this.todos = this.todos.map(el => {
       if (el.id === id) {
         return { ...el, status: status };
       }
       return el;
     });
-
-    return false;
   }
 
-  changeTodoImportance(id: string, importance: TodoImportance): boolean {
+  changeTodoImportance(id: string, importance: TodoImportance): void {
     this.todos = this.todos.map(el => {
       if (el.id === id) {
         return { ...el, importance: importance };
       }
       return el;
     });
+  }
 
-    return false;
+  changeTodoTitle(id: string, title: string): void {
+    this.todos = this.todos.map(el => {
+      if (el.id === id) {
+        return { ...el, title: title };
+      }
+      return el;
+    });
+  }
+
+  changeTodoInfo(id: string, info: string): void {
+    this.todos = this.todos.map(el => {
+      if (el.id === id) {
+        return { ...el, info: info };
+      }
+      return el;
+    });
   }
 
   sortByDate(option: SortOptions): void | Array<Todo> {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Dispatch } from "react";
+import React, { useState, Dispatch } from "react";
 import styles from "../Styles/TodoItem.module.css";
 
 //Components
@@ -8,10 +8,9 @@ import TodoToolPanel from "./TodoToolPanel";
 
 // Store
 import { TodoStore } from "../DevTools";
-import { TodoHistoryItem } from "../Store/TodoStore";
 
 // Types
-import { TodoImportance, TodoInterface } from "../types/TodoTypes";
+import { TodoInterface } from "../types/TodoTypes";
 
 const ShowEditButton: React.FC<{
   handler: React.Dispatch<React.SetStateAction<boolean>>;
@@ -61,16 +60,11 @@ const TodoItemNoEditMode: React.FC<Props> = ({
   showEditModeHandler,
 }) => {
   const [historyShown, setHistoryShown] = useState<boolean>(false);
-  const [editMode, setEditMode] = useState<boolean>(false);
-
   return (
     <li className={styles.item}>
       <h3 className={styles.heading}>{title}</h3>
       <div className={styles.info}>
         <h4>Created: {creationDate.toLocaleDateString()}</h4>
-        <span>
-          LastEdited: {history[history.length - 1]?.date.toLocaleString()}
-        </span>
         <p>{info}</p>
         <p>
           Status:{" "}
@@ -83,17 +77,24 @@ const TodoItemNoEditMode: React.FC<Props> = ({
             : "started"}
         </p>
         <p>
-          Current importance:
-          {importance === 1
-            ? " Important"
-            : importance === 2
-            ? " Can wait"
-            : " Unimportant"}
+          Current importance:{" "}
+          {(() => {
+            if (Number(importance) === 1) {
+              return "Important";
+            } else if (Number(importance) === 2) {
+              return "Can wait";
+            } else if (Number(importance) === 3) {
+              return "Unimportant";
+            }
+          })()}
         </p>
+        <span>
+          LastEdited: {history[history.length - 1]?.date.toLocaleString()}
+        </span>
         <TodoToolPanel>
           <Tooltip handler={setHistoryShown} />
           <DeleteButton handler={() => TodoStore.removeTodo(id)} />
-          <EditButton handler={setEditMode} />
+          <EditButton handler={showEditModeHandler} />
         </TodoToolPanel>
 
         {historyShown && <ChangeList history={history} />}

@@ -21,7 +21,6 @@ const WithTooltip = <T extends Arguments>({ Component, info }: T) => {
     constructor(props: Props) {
       super(props);
 
-      console.log(this.props);
       this.state = { shown: false };
     }
 

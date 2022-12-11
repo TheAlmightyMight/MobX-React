@@ -14,10 +14,17 @@ interface TodoInterface {
   importance: TodoImportance;
 }
 
+interface TodoChange {
+  title: string;
+  info: string;
+  status: string;
+  importance: string;
+}
+
 interface TodoHistoryInterface {
   id: string;
   date: Date | string;
-  changes: Array<string>;
+  changes: Array<TodoChange>;
 }
 
 enum SortOptions {
@@ -39,4 +46,4 @@ enum TodoImportance {
 }
 
 export { SortOptions, TodoStatuses, TodoImportance };
-export type { TodoInterface, TodoStoreType, TodoHistoryInterface };
+export type { TodoInterface, TodoStoreType, TodoHistoryInterface, TodoChange };

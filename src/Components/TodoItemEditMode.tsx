@@ -35,41 +35,99 @@ const TodoItemEditMode: React.FC<Props> = ({
   title,
   info,
   id,
-  creationDate,
   importance,
   status,
   history,
   showEditModeHandler,
 }) => {
-  const [historyShown, setHistoryShown] = useState<boolean>(false);
-  const [editMode, setEditMode] = useState<boolean>(false);
+  const [buffer, setBuffer] = useState({
+    importance: "",
+    status: "",
+    title: "",
+    info: "",
+  });
+  const [titleValue, setTitleValue] = useState<string>(title);
   const [infoValue, setInfoValue] = useState<string>(info);
+  const [importanceValue, setImportanceValue] = useState<
+    TodoImportance | string
+  >(importance);
+  const [statusValue, setStatusValue] = useState<string>(status);
 
-  const infoValueHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInfoValue(e.target.value);
+  const importanceValueHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setImportanceValue(e.target.value);
+    setBuffer(prev => {
+      return { ...prev, importance: e.target.value };
+    });
   };
 
-  useEffect(() => {
-    console.log("history");
-    TodoStore.addToItemHistory(id, new TodoHistoryItem([]));
-  }, [status, info, title, status]);
+  const statusValueHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusValue(e.target.value);
+    setBuffer(prev => {
+      return { ...prev, status: e.target.value };
+    });
+  };
+
+  const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitleValue(e.target.value);
+    setBuffer(prev => {
+      return { ...prev, title: e.target.value };
+    });
+  };
+
+  const infoHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInfoValue(e.target.value);
+    setBuffer(prev => {
+      return { ...prev, info: e.target.value };
+    });
+  };
+
+  const saveHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (buffer.importance) {
+      TodoStore.changeTodoImportance(
+        id,
+        buffer.importance as any as TodoImportance,
+      );
+    }
+
+    if (buffer.status) {
+      TodoStore.changeTodoStatus(id, buffer.status as TodoStatuses);
+    }
+
+    if (buffer.title) {
+      TodoStore.changeTodoTitle(id, buffer.title);
+    }
+
+    if (buffer.info) {
+      TodoStore.changeTodoInfo(id, buffer.info);
+    }
+
+    TodoStore.addToItemHistory(id, new TodoHistoryItem([buffer]));
+  };
+
+  const exitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+    showEditModeHandler(false);
+  };
 
   return (
     <li className={styles.item}>
       <h3 className={styles.heading}>{title}</h3>
       <form className={styles.info}>
-        <fieldset>
+        <fieldset style={{ border: "none" }}>
           <label>
             Current status:{" "}
             <select
-              onChange={() =>
-                TodoStore.changeTodoStatus(id, TodoStatuses.STARTED)
-              }
+              name="status"
+              value={statusValue}
+              onChange={e => statusValueHandler(e)}
             >
               <optgroup>
-                <option>Important</option>
-                <option>Can wait</option>
-                <option>Unimportant</option>
+                <option value={TodoStatuses.ADDED}>Added</option>
+                <option value={TodoStatuses.STARTED}>Started</option>
+                <option value={TodoStatuses.POSTPONED}>Postponed</option>
+                <option value={TodoStatuses.FINISHED}>Finished</option>
               </optgroup>
             </select>
           </label>
@@ -77,18 +135,27 @@ const TodoItemEditMode: React.FC<Props> = ({
           <label>
             Current importance:{" "}
             <select
-              onChange={() =>
-                TodoStore.changeTodoImportance(id, TodoImportance.CAN_WAIT)
-              }
-              // value={}
+              name="importance"
+              onChange={e => importanceValueHandler(e)}
+              value={importanceValue}
             >
               <optgroup>
-                <option>Important</option>
-                <option>Can wait</option>
-                <option>Unimportant</option>
+                <option value={TodoImportance.IMPORTANT}>Important</option>
+                <option value={TodoImportance.CAN_WAIT}>Can wait</option>
+                <option value={TodoImportance.UNIMPORTANT}>Unimportant</option>
               </optgroup>
             </select>
           </label>
+          <div>
+            <label>
+              Title:{" "}
+              <input
+                type="text"
+                value={titleValue}
+                onChange={e => titleHandler(e)}
+              />
+            </label>
+          </div>
           <div style={{ position: "relative" }}>
             <label
               htmlFor="description"
@@ -99,13 +166,23 @@ const TodoItemEditMode: React.FC<Props> = ({
             <textarea
               id="description"
               className={styles.editModeInfo}
-              onChange={infoValueHandler}
               value={infoValue}
+              onChange={e => infoHandler(e)}
             />
           </div>
           <TodoToolPanel>
-            <button onClick={() => showEditModeHandler(false)}>Exit</button>
-            <button onClick={() => TodoStore}>Save</button>
+            <button
+              type="button"
+              onClick={e => exitHandler(e)}
+            >
+              Exit
+            </button>
+            <button
+              type="button"
+              onClick={e => saveHandler(e)}
+            >
+              Save
+            </button>
           </TodoToolPanel>
         </fieldset>
       </form>
