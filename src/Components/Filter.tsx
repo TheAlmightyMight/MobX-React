@@ -6,11 +6,18 @@ const Filter: React.FC = () => {
   return (
     <div className={styles.container}>
       <form className={styles.form}>
-        <div>
-          <legend>Filter</legend>
-          <input type="text" placeholder="Filter by name" />
-        </div>
-        <SearchIcon />
+        <label
+          className={styles.label}
+          htmlFor="search"
+        >
+          Filter
+        </label>
+        <input
+          id="search"
+          className={styles.input}
+          type="text"
+          placeholder="Filter by name"
+        />
       </form>
     </div>
   );

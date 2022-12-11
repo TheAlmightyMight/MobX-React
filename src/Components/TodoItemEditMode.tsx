@@ -117,7 +117,7 @@ const TodoItemEditMode: React.FC<Props> = ({
       <form className={styles.info}>
         <fieldset style={{ border: "none" }}>
           <label>
-            Current status:{" "}
+            Current progress:{" "}
             <select
               name="status"
               value={statusValue}

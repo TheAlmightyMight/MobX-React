@@ -67,7 +67,7 @@ const TodoItemNoEditMode: React.FC<Props> = ({
         <h4>Created: {creationDate.toLocaleDateString()}</h4>
         <p>{info}</p>
         <p>
-          Status:{" "}
+          Progress:{" "}
           {status === "ADDED"
             ? "started"
             : status === "POSTPONED"

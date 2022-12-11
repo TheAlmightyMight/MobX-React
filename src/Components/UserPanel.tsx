@@ -10,11 +10,11 @@ import Filter from "./Filter";
 
 const UserPanel: React.FC = () => {
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <Filter />
-      <StatusIcon />
+      {/* <StatusIcon />
       <ImportanceIcon />
-      <DateIcon />
+      <DateIcon /> */}
     </div>
   );
 };

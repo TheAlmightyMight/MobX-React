@@ -20,7 +20,7 @@ function App() {
   const [userPanelShown, setUserPanelShown] = useState<boolean>(false);
   return (
     <main className={styles.mainContainer}>
-      <Heading />
+      <Heading setUserPanelShown={setUserPanelShown} />
       {userPanelShown ? <UserPanel /> : <TodoForm store={TodoStore} />}
       <TodoList store={TodoStore} />
     </main>
