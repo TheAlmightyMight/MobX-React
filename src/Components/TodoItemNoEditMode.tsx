@@ -64,7 +64,12 @@ const TodoItemNoEditMode: React.FC<Props> = ({
     <li className={styles.item}>
       <h3 className={styles.heading}>{title}</h3>
       <div className={styles.info}>
-        <h4>Created: {creationDate.toLocaleDateString()}</h4>
+        <h4>
+          Created:{" "}
+          {creationDate.toLocaleDateString() +
+            "  at  " +
+            creationDate.toLocaleTimeString()}
+        </h4>
         <p>{info}</p>
         <p>
           Current progress:{" "}

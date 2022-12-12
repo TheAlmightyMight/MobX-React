@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import styles from "../Styles/TodoList.module.css";
-import { TodoImportance, TodoStatuses } from "../types/TodoTypes";
 
 // Store
 import { observer } from "mobx-react";
 import { TodoStore } from "../DevTools";
+
 // Components
 import TodoItem from "./TodoItem";
 
 const TodoList = observer<React.FunctionComponent>(() => {
+  if (TodoStore.error) {
+    return (
+      <div>
+        <h2>Something went wrong! Reload the page.</h2>
+      </div>
+    );
+  }
   return (
     <div className={styles.container}>
       <ul>
