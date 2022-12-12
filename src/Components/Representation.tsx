@@ -58,7 +58,9 @@ const Representation: React.FC = e => {
       <section>
         <form>
           <fieldset className={styles.fieldSet}>
-            {/* <label>Filter</label> */}
+            <label className={styles.labelMain}>
+              <h2>Sort and filter</h2>
+            </label>
 
             <div className={styles.wrapper}>
               <div className={styles.container}>

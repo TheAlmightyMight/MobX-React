@@ -69,7 +69,9 @@ const TodoForm: React.FC<Props> = ({ store }) => {
   return (
     <form>
       <fieldset className={styles.container}>
-        <legend className={styles.label}>Create a Todo</legend>
+        <legend className={styles.label}>
+          <h2>Create a Todo</h2>
+        </legend>
 
         {titleError ? "error" : ""}
 

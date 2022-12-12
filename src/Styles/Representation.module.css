@@ -19,6 +19,10 @@
   flex-direction: column;
 }
 
+.labelMain {
+  margin-top: 1rem;
+}
+
 .label {
   margin: 0 1rem 10px 1rem;
 }
