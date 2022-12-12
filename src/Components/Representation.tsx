@@ -9,17 +9,22 @@ import WithTooltip from "./WithTooltip";
 
 const Button: React.FC<{
   handler: React.Dispatch<React.SetStateAction<any>>;
-}> = ({ handler }) => (
-  <div>
-    <button
-      className={styles.btn}
-      type="button"
-      onClick={e => handler(e)}
-    >
-      Reset
-    </button>
-  </div>
-);
+  style: { bottom: string; left: string; width: string };
+}> = ({ handler, style }) => {
+  console.log(style);
+  return (
+    <div>
+      <button
+        className={styles.btn}
+        style={style}
+        type="button"
+        onClick={e => handler(e)}
+      >
+        Reset
+      </button>
+    </div>
+  );
+};
 
 const ResetButton = WithTooltip({
   Component: Button,
@@ -84,7 +89,7 @@ const Representation: React.FC = e => {
                 className={styles.label}
                 htmlFor="importance"
               >
-                Importance
+                Filter by mportance
               </label>
               <select
                 className={styles.select}
@@ -100,7 +105,7 @@ const Representation: React.FC = e => {
                 className={styles.label}
                 htmlFor="progress"
               >
-                Progress
+                Filter by progress
               </label>
               <select
                 className={styles.select}
@@ -151,7 +156,10 @@ const Representation: React.FC = e => {
               </select>
             </div>
           </div>
-          <ResetButton handler={resetHandler} />
+          <ResetButton
+            handler={resetHandler}
+            style={{ bottom: "50px", left: "0px", width: "150px" }}
+          />
         </fieldset>
       </form>
     </div>

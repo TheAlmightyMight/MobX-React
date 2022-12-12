@@ -12,6 +12,7 @@ interface State {
 
 interface Props {
   handler: React.Dispatch<React.SetStateAction<any>>;
+  style?: { bottom: string; left: string; width: string };
 }
 
 const WithTooltip = <T extends Arguments>({ Component, info }: T) => {
@@ -39,7 +40,12 @@ const WithTooltip = <T extends Arguments>({ Component, info }: T) => {
           onMouseEnter={this.mouseEnterHandler.bind(this)}
           onMouseLeave={this.mouseLeaveHandler.bind(this)}
         >
-          {this.state.shown ? <Hint info={info} /> : null}
+          {this.state.shown ? (
+            <Hint
+              style={this.props.style!}
+              info={info}
+            />
+          ) : null}
           <Component handler={this.props.handler} />
         </div>
       );
