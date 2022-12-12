@@ -47,6 +47,8 @@ enum TodoImportance {
 interface Filters {
   importance: TodoImportance | number;
   status: TodoStatuses | string;
+  sortByImportance: SortOptions | string;
+  sortByDate: SortOptions | string;
 }
 
 export { SortOptions, TodoStatuses, TodoImportance };

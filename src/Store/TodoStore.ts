@@ -43,7 +43,12 @@ class TodoStoreClass {
   error: boolean = false;
 
   mutableTodos: Array<Todo> = [];
-  filters: Filters = { importance: 0, status: "" };
+  filters: Filters = {
+    importance: 0,
+    status: "",
+    sortByImportance: "",
+    sortByDate: "",
+  };
 
   static instance: InstanceType<typeof TodoStoreClass>;
 
@@ -81,7 +86,7 @@ class TodoStoreClass {
 
   addTodo(title: string, info: string, importance: number): void {
     const todo = new Todo(title, info, importance);
-    this.todos = [...this.todos, todo];
+    this.todos = [todo, ...this.todos];
   }
 
   removeTodo(id: string): void {
@@ -125,14 +130,25 @@ class TodoStoreClass {
   }
 
   sortByDate(option: SortOptions): void | Array<Todo> {
+    console.log(option);
     switch (option) {
       case SortOptions.ASCENDING: {
+        console.log(
+          this.mutableTodos.sort(
+            (a, b) => b.creationDate.getTime() - a.creationDate.getTime(),
+          ),
+        );
         this.mutableTodos.sort(
           (a, b) => a.creationDate.getTime() - b.creationDate.getTime(),
         );
         break;
       }
       case SortOptions.DESCENDING: {
+        console.log(
+          this.mutableTodos.sort(
+            (a, b) => b.creationDate.getTime() - a.creationDate.getTime(),
+          ),
+        );
         this.mutableTodos.sort(
           (a, b) => b.creationDate.getTime() - a.creationDate.getTime(),
         );
@@ -143,13 +159,14 @@ class TodoStoreClass {
     }
   }
 
-  sortByTodoImportance(option: SortOptions): void | Array<Todo> {
+  sortByImportance(option: SortOptions): void | Array<Todo> {
+    console.log(option);
     switch (option) {
-      case SortOptions.ASCENDING: {
+      case SortOptions.DESCENDING: {
         this.mutableTodos.sort((a, b) => a.importance - b.importance);
         break;
       }
-      case SortOptions.DESCENDING: {
+      case SortOptions.ASCENDING: {
         this.mutableTodos.sort((a, b) => b.importance - a.importance);
         break;
       }
@@ -173,6 +190,10 @@ class TodoStoreClass {
 
   setMutableTodos(arr: Array<Todo>): void {
     this.mutableTodos = arr;
+  }
+
+  get todosImmutable(): Array<Todo> {
+    return this.todos;
   }
 
   get filtersAll(): typeof this.filters {
@@ -202,22 +223,67 @@ reaction(
 );
 
 reaction(
-  () => TodoStore.filters,
+  () => TodoStore.filters.sortByDate,
   () => {
-    TodoStore.mutableTodos = TodoStore.todos;
-    for (let key in TodoStore.filtersAll) {
-      //@ts-ignore
-      if (TodoStore.filtersAll[key] === 0 || TodoStore.filtersAll[key] === "") {
-        continue;
-      }
-      TodoStore.setMutableTodos(
-        TodoStore.mutableTodos.filter(
-          //@ts-ignore
-          el => el[key] === TodoStore.filtersAll[key],
-        ),
-      );
-    }
+    TodoStore.sortByDate(TodoStore.filters.sortByDate as SortOptions);
   },
 );
+
+reaction(
+  () => TodoStore.filters.sortByImportance,
+  () => {
+    TodoStore.sortByImportance(
+      TodoStore.filters.sortByImportance as SortOptions,
+    );
+  },
+);
+
+reaction(
+  () => TodoStore.filters.status,
+  () => {
+    TodoStore.setMutableTodos(TodoStore.todosImmutable);
+
+    // ----------------------------------------------------
+  },
+);
+
+reaction(
+  () => TodoStore.filters.importance,
+  () => {
+    TodoStore.setMutableTodos(
+      TodoStore.mutableTodos.filter(
+        el => el["importance"] === TodoStore.filtersAll["importance"],
+      ),
+    );
+  },
+);
+
+reaction(
+  () => TodoStore.filters.status,
+  () => {
+    TodoStore.setMutableTodos(
+      TodoStore.mutableTodos.filter(
+        el => el["status"] === TodoStore.filtersAll["status"],
+      ),
+    );
+  },
+);
+
+// for (let key of keys) {
+//   if (
+//     //@ts-ignore
+//     TodoStore.filtersAll[key] === 0 ||
+//     //@ts-ignore
+//     TodoStore.filtersAll[key] === ""
+//   ) {
+//     continue;
+//   }
+// TodoStore.setMutableTodos(
+//   TodoStore.mutableTodos.filter(
+//     //@ts-ignore
+//     el => el[key] === TodoStore.filtersAll[key],
+//   ),
+// );
+// }
 
 export default TodoStore;
