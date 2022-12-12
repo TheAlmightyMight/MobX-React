@@ -15,6 +15,8 @@ class Todo implements TodoInterface {
   info: string;
   creationDate: Date = new Date();
   editDate: string = "";
+  expired: boolean = false;
+  finishTime: string = "";
   history: Array<TodoHistoryInterface> = [];
   status: TodoStatuses = TodoStatuses.ADDED;
   importance: TodoImportance;

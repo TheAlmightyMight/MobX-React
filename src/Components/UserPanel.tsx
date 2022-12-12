@@ -1,11 +1,6 @@
 import React from "react";
 
 //Components
-import StatusIcon from "./StatusIcon";
-import SearchIcon from "./SearchIcon";
-import ImportanceIcon from "./ImportanceIcon";
-import DateIcon from "./DateIcon";
-
 import Representation from "./Representation";
 import Filter from "./Filter";
 

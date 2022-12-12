@@ -11,7 +11,7 @@ interface State {
 }
 
 interface Props {
-  handler: React.Dispatch<React.SetStateAction<boolean>>;
+  handler: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const WithTooltip = <T extends Arguments>({ Component, info }: T) => {
@@ -35,7 +35,7 @@ const WithTooltip = <T extends Arguments>({ Component, info }: T) => {
     render() {
       return (
         <div
-          style={{ position: "relative", width: "60px" }}
+          style={{ position: "relative" }}
           onMouseEnter={this.mouseEnterHandler.bind(this)}
           onMouseLeave={this.mouseLeaveHandler.bind(this)}
         >
