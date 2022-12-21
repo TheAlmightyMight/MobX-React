@@ -15,7 +15,7 @@ import { TodoInterface } from "../types/TodoTypes";
 const ShowEditButton: React.FC<{
   handler: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ handler }) => {
-  return <button onClick={() => handler}>History</button>;
+  return <button onClick={() => handler(true)}>History</button>;
 };
 
 const DeleteButtonComponent: React.FC<{
@@ -102,7 +102,12 @@ const TodoItemNoEditMode: React.FC<Props> = ({
           <EditButton handler={showEditModeHandler} />
         </TodoToolPanel>
 
-        {historyShown && <ChangeList history={history} />}
+        {historyShown && (
+          <ChangeList
+            handler={setHistoryShown}
+            history={history}
+          />
+        )}
       </div>
     </li>
   );
