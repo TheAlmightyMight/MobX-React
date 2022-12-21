@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "../Styles/TodoItem.module.css";
 
 //Components
@@ -105,7 +105,7 @@ const TodoItemEditMode: React.FC<Props> = ({
       TodoStore.changeTodoInfo(id, buffer.info);
     }
 
-    TodoStore.addToItemHistory(id, new TodoHistoryItem([buffer]));
+    TodoStore.addToItemHistory(id, new TodoHistoryItem(buffer));
   };
 
   const exitHandler = (e: React.FormEvent) => {

@@ -73,6 +73,11 @@ const TodoForm: React.FC<Props> = ({ store }) => {
   };
 
   const addTodoHandler = () => {
+    if (title.length === 0 || info.length === 0) {
+      setModalShown(true);
+      return;
+    }
+
     if (titleError || infoError) {
       setModalShown(true);
       return;

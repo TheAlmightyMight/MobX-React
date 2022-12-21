@@ -23,7 +23,7 @@ interface TodoChange {
 interface TodoHistoryInterface {
   id: string;
   date: Date | string;
-  changes: Array<TodoChange>;
+  changes: TodoChange;
 }
 
 enum SortOptions {
@@ -52,6 +52,7 @@ interface Filters {
 }
 
 export { SortOptions, TodoStatuses, TodoImportance };
+
 export type {
   TodoInterface,
   TodoStoreType,

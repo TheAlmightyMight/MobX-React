@@ -31,9 +31,9 @@ class Todo implements TodoInterface {
 export class TodoHistoryItem implements TodoHistoryInterface {
   id: string = v4();
   date: string = new Date().toLocaleString();
-  changes: Array<TodoChange>;
+  changes: TodoChange;
 
-  constructor(changes: Array<TodoChange>) {
+  constructor(changes: TodoChange) {
     this.changes = changes;
   }
 }
@@ -244,8 +244,6 @@ reaction(
   () => TodoStore.filters.status,
   () => {
     TodoStore.setMutableTodos(TodoStore.todosImmutable);
-
-    // ----------------------------------------------------
   },
 );
 
@@ -270,22 +268,5 @@ reaction(
     );
   },
 );
-
-// for (let key of keys) {
-//   if (
-//     //@ts-ignore
-//     TodoStore.filtersAll[key] === 0 ||
-//     //@ts-ignore
-//     TodoStore.filtersAll[key] === ""
-//   ) {
-//     continue;
-//   }
-// TodoStore.setMutableTodos(
-//   TodoStore.mutableTodos.filter(
-//     //@ts-ignore
-//     el => el[key] === TodoStore.filtersAll[key],
-//   ),
-// );
-// }
 
 export default TodoStore;
